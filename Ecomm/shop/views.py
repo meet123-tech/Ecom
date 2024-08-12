@@ -6,3 +6,8 @@ from .models import Product
 def home(request):
     Products = Product.objects.all()
     return render(request,'home.html',{'products':Products})
+
+
+
+def about(request):
+    return render(request,'about.html',{})
