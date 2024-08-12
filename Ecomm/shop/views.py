@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Product
+from .models import Product,Category
 
 # Create your views here.
 
@@ -44,3 +44,23 @@ def logout_user(request):
 def product(request,pk):
     product = Product.objects.get(id=pk)
     return render(request,'product.html',{'product':product})
+
+
+def category(request,foo):
+    foo = foo.replace('-',' ')
+    
+    try:
+        
+        category = Category.objects.get(name=foo)
+        
+
+        products = Product.objects.filter(category=category)
+        
+        return render(request, 'category.html', {'category': category, 'products': products})
+
+
+    except:
+        messages.success(request, ('Category doesnt Exist'))
+        return redirect('home')
+
+
