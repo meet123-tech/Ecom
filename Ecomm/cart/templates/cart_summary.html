@@ -16,24 +16,61 @@
     </div>
 </header>
 <!-- Section-->
-<section class="py-5">
-    <div class="container px-4 px-lg-5 mt-5">
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+<div class="container my-5 ">
+    <div class="row justify-content-md-center">
 
+        {% if cart_products %}
 
+        
+        {% for product in cart_products %}
+            
+            
 
-           
+        <div class="col-8 shadow p-4">
 
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    
+                    
+                        
+                  
+                        
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text mb-4">{{ product.description }}</p>
 
+                            {% if product.is_sale %}
+                            <strike>
+                                {{product.price}}
+                            </strike>
+                            {{product.sale_price}} &#x20B9;
 
+                            {% else %}
+                            {{product.price}} &#x20B9;
+                            {% endif %}
+                            <br>
+                            <br>
+                            <a class="btn btn-secondary" href="{% url 'home' %}">Back</a>
 
-
-           
-
+                            <!-- <button class="btn btn-primary" value="{{ product.id }}" id="add-cart">Add to Cart</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
+        {% endfor %}
+        
 
+        {% else %}
 
+        <h1>Your Cart is Empty!.....</h1>
+        {% endif %}
     </div>
-</section>
+
+</div>
 {% endblock content %}
