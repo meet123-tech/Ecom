@@ -21,10 +21,10 @@
 
         {% if cart_products %}
 
-        
+
         {% for product in cart_products %}
-            
-            
+
+
 
         <div class="col-8 shadow p-4">
 
@@ -33,11 +33,11 @@
                     <div class="col-md-4">
                         <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
                     </div>
-                    
-                    
-                        
-                  
-                        
+
+
+
+
+
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title">{{ product.name }}</h5>
@@ -52,10 +52,35 @@
                             {% else %}
                             {{product.price}} &#x20B9;
                             {% endif %}
-                            <br>
-                            <br>
-                            <a class="btn btn-secondary" href="{% url 'home' %}">Back</a>
 
+                            <div class="row ">
+                                <div class="col-md-3 my-3">
+                                    Quantity :
+                                </div>
+
+                                <div class="col-md-3 my-3">
+                                    
+                                    <select class="form-select" id="select{{product.id}}">
+
+                                        {% for key,val in prod_quantities.items %}
+                                            {% if key == product.id|slugify %}
+                                            <option selected> {{ val }} </option>  
+                                            {% endif %}
+                                        {% endfor %}
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <a class="btn btn-secondary" href="{% url 'home' %}">Back</a>
+                            <button type="button" data-index="{{ product.id }}" class="btn btn-secondary update-cart">
+                                Update </button>
                             <!-- <button class="btn btn-primary" value="{{ product.id }}" id="add-cart">Add to Cart</button> -->
                         </div>
                     </div>
@@ -64,7 +89,7 @@
 
         </div>
         {% endfor %}
-        
+
 
         {% else %}
 
@@ -73,4 +98,38 @@
     </div>
 
 </div>
+
+
+<script>
+    $(document).on('click', '.update-cart', function(e){
+
+        e.preventDefault();
+        var productid = $(this).data('index');
+        
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart_update' %}",
+            data: {
+                product_id: $(this).data('index'),
+                product_qunt: $('#select' + productid + ' option:selected').text(),
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                action: 'post'
+            },
+
+            success: function (json) {
+                // console.log(json)
+                // document.getElementById('card_quantity').textContent = json.qunt
+                location.reload()
+
+            },
+
+            error: function (xhr, errmsg, err) {
+
+            }
+
+        })
+
+
+    })
+</script>
 {% endblock content %}

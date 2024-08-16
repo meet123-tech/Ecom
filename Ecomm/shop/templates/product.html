@@ -31,6 +31,28 @@
                         {% endif %}
                         <br>
                         <br>
+                        <div class="row ">
+                            <div class="col-md-3">
+                                Quantity :
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="qunt-prod" >
+                                
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+
+                                    
+                                </select>
+                            </div>
+                        </div>
+                       
+                        <br>
+                        <br>
+
+                      
                         <a class="btn btn-secondary" href="{% url 'home' %}" >Back</a>
                         
                         <button class="btn btn-primary" value="{{ product.id }}" id="add-cart">Add to Cart</button>
@@ -63,6 +85,7 @@
             url:"{% url 'cart_add' %}",
             data:{
                  product_id : $('#add-cart').val(),
+                 product_qunt: $('#qunt-prod option:selected').text() ,
                  csrfmiddlewaretoken : "{{ csrf_token }}",
                  action : 'post'
             },
