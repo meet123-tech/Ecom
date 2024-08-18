@@ -5,21 +5,22 @@ from .models import Product,Category
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .forms import SignUpForm,UserUpdateForm
+from .forms import SignUpForm,UserUpdateForm,ChangePasswordForm
 
 # Create your views here.
 
 
 def home(request):
     Products = Product.objects.all()
-    username = None
-    
-    if request.user.is_authenticated:
-        main_user = User.objects.get(id=request.user.id)
-        username = main_user.username
+    # username = None
+
+    # if request.user.is_authenticated:
+    #     main_user = User.objects.get(id=request.user.id)
+    #     username = main_user.username
 
 
-    return render(request,'home.html',{'products':Products,'main_user':username })
+    return render(request,'home.html',{'products':Products})
+
 
 
 
@@ -63,6 +64,9 @@ def register(request):
             return redirect('register')
     else:
         return render(request,'register.html',{'form': form})
+
+
+        
     
 def update_user(request):
 
@@ -83,6 +87,31 @@ def update_user(request):
         
 
     
+def update_password(request):
+
+    if request.user.is_authenticated:
+        current_user = request.user
+
+        if request.method == 'POST':
+            form = ChangePasswordForm(current_user,request.POST)
+
+            if form.is_valid():
+                form.save()
+                messages.success(request,('Your password has been updated'))
+                return redirect('login')
+                # login(request,current_user)
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request,error)
+                return redirect('update_password')
+        else:
+            form = ChangePasswordForm(current_user)
+    
+            return render(request,'update_password.html',{'form': form})    
+    else:
+        messages.success(
+            request, ('You must be logged in to access this page'))
+        return redirect('login')
 
 
 
