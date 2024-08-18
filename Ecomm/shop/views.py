@@ -5,14 +5,21 @@ from .models import Product,Category
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .forms import SignUpForm
+from .forms import SignUpForm,UserUpdateForm
 
 # Create your views here.
 
 
 def home(request):
     Products = Product.objects.all()
-    return render(request,'home.html',{'products':Products})
+    username = None
+    
+    if request.user.is_authenticated:
+        main_user = User.objects.get(id=request.user.id)
+        username = main_user.username
+
+
+    return render(request,'home.html',{'products':Products,'main_user':username })
 
 
 
@@ -28,7 +35,7 @@ def login_user(request):
 
         if user is not None:
             login(request,user)
-            messages.success(request, ('you have been logged in....'))
+            messages.success(request, (f'Welcome {username} you have been logged in....'))
             return redirect('home')
 
         else:
@@ -57,11 +64,31 @@ def register(request):
     else:
         return render(request,'register.html',{'form': form})
     
+def update_user(request):
+
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        user_form = UserUpdateForm(request.POST or None,instance = current_user)
+
+        if user_form.is_valid():
+            user_form.save()
+            login(request,current_user)
+            messages.success(request, ('Profile updated successfully'))
+            return redirect('home')
+        
+        return render(request,'update_user.html',{'user_form': user_form})
+    else:
+        messages.success(request, ('You must be logged in to access this page'))
+        return redirect('login')
+        
+
     
+
+
 
 def logout_user(request):
     logout(request)
-    messages.success(request,('you have been logged out....'))
+    messages.success(request,(f' you have been logged out....'))
     return redirect('home')
 
 

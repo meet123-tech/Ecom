@@ -16,6 +16,8 @@
                 {% if user.is_authenticated %} 
                     
                 <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'update_user' %}">Profile</a></li>
+
 
                 {% else %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
@@ -35,10 +37,18 @@
                         <li><a class="dropdown-item" href="{% url 'category' 'Cell-Phone' %}">Smart Phones</a></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'Smart-Watch' %}">Smart Watch</a></li>
 
-
+                        
                        
                     </ul>
                 </li>
+
+
+                {% if user.is_authenticated %}
+
+                <li class="nav-item ms-5">Welcome {{ main_user }}</li>
+
+                {% endif %}
+                
             </ul>
             <form class="d-flex">
                 <a class="btn btn-outline-dark" href="{% url 'cart_summary' %}">
