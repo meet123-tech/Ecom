@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .forms import SignUpForm,UserUpdateForm,ChangePasswordForm,UserInfoForm
-
+from django.db.models import Q
 # Create your views here.
 
 
@@ -27,6 +27,23 @@ def home(request):
 def about(request):
     return render(request,'about.html',{})
 
+def search(request):
+    # query = request.GET.get('q')
+
+    if request.method == 'POST':
+
+        searched = request.POST['searched']
+        products = Product.objects.filter(
+            Q(name__icontains=searched) | Q(description__icontains=searched))
+        if  not products:
+            messages.success(
+            request, ('No products found for the given keyword'))
+            return render(request,'search.html', {})
+        else:
+            return render(request, 'search.html', {'products': products})
+
+    else:
+        return render(request,'search.html',{})
 
 def login_user(request):
     if request.method == 'POST':
