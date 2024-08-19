@@ -1,11 +1,11 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
-from .models import Product,Category
+from .models import Product,Category,Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .forms import SignUpForm,UserUpdateForm,ChangePasswordForm
+from .forms import SignUpForm,UserUpdateForm,ChangePasswordForm,UserInfoForm
 
 # Create your views here.
 
@@ -57,8 +57,8 @@ def register(request):
             user = authenticate(username=username, password=password)
             login(request, user)
         
-            messages.success(request, ('Account created for '+ username))
-            return redirect('home')
+            messages.success(request, ('Account created for '+ username + ' Please fill out below Infrmation'))
+            return redirect('update_info')
         else:
             messages.success(request, ('Something Went wrong...'))
             return redirect('register')
@@ -108,6 +108,23 @@ def update_password(request):
             form = ChangePasswordForm(current_user)
     
             return render(request,'update_password.html',{'form': form})    
+    else:
+        messages.success(
+            request, ('You must be logged in to access this page'))
+        return redirect('login')
+
+
+def update_info(request):
+    if request.user.is_authenticated:
+        current_user = Profile.objects.get(user__id=request.user.id)
+        info_form = UserInfoForm(request.POST or None, instance=current_user)
+
+        if info_form.is_valid():
+            info_form.save()
+            messages.success(request, ('User Info updated successfully'))
+            return redirect('home')
+
+        return render(request, 'update_info.html', {'user_form': info_form})
     else:
         messages.success(
             request, ('You must be logged in to access this page'))

@@ -15,10 +15,26 @@
                 
                 {% if user.is_authenticated %} 
                     
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">Profile</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        
+                
+                        <li><a class="dropdown-item" href="{% url 'update_user' %}">Update User</a></li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'update_info' %}">Update Info</a></li>
+                
+                
+                
+                    </ul>
+                </li>
+
+
                 <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'update_user' %}">Profile</a></li>
-
-
                 {% else %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
@@ -43,11 +59,7 @@
                 </li>
 
 
-                {% if user.is_authenticated %}
-
-                <li class="nav-item ms-5">Welcome {{ main_user }}</li>
-
-                {% endif %}
+                
                 
             </ul>
             <form class="d-flex">
