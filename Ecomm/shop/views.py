@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from .forms import SignUpForm,UserUpdateForm,ChangePasswordForm,UserInfoForm
 from django.db.models import Q
+from cart.cart import Cart
+import json
 # Create your views here.
 
 
@@ -53,6 +55,17 @@ def login_user(request):
 
         if user is not None:
             login(request,user)
+
+            current_user = Profile.objects.get(user__id = request.user.id)
+            saved_cart = current_user.old_cart
+            
+            cart = Cart(request)
+            if saved_cart:
+                converted_cart = json.loads(saved_cart)
+                for key,val in converted_cart.items():
+                    cart.db_add(product=key, quantity=val)
+            
+
             messages.success(request, (f'Welcome {username} you have been logged in....'))
             return redirect('home')
 

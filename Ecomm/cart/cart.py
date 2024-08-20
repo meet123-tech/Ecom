@@ -1,9 +1,11 @@
-from shop.models import Product
+from shop.models import Product,Profile
 
 class Cart():
     
     def __init__(self,request):
         self.session = request.session
+
+        self.request = request
 
         cart = self.session.get('session_key')
 
@@ -24,6 +26,35 @@ class Cart():
             # print(self.cart)
         
         self.session.modified = True
+
+       
+        if self.request.user.is_authenticated:
+            
+            current_user = Profile.objects.filter(user__id = self.request.user.id)
+            cart_memory = str(self.cart)
+            cart_memory = cart_memory.replace("\'","\"")
+            current_user.update(old_cart = str(cart_memory))
+            
+    def db_add(self, product, quantity):
+        product_id = str(product)
+        product_qunt = str(quantity)
+
+        if product_id in self.cart:
+            pass
+        else:
+            # self.cart[product_id] = {'price': str(product.price)}
+            self.cart[product_id] = int(product_qunt)
+            # print(self.cart)
+
+        self.session.modified = True
+
+        if self.request.user.is_authenticated:
+
+            current_user = Profile.objects.filter(
+                user__id=self.request.user.id)
+            cart_memory = str(self.cart)
+            cart_memory = cart_memory.replace("\'", "\"")
+            current_user.update(old_cart=str(cart_memory))
 
     def get_products(self):
 
@@ -47,6 +78,15 @@ class Cart():
         self.session.modified = True
 
         final_cart = self.cart
+
+        if self.request.user.is_authenticated:
+
+            current_user = Profile.objects.filter(
+                user__id=self.request.user.id)
+            cart_memory = str(self.cart)
+            cart_memory = cart_memory.replace("\'", "\"")
+            current_user.update(old_cart=str(cart_memory))
+            
         return final_cart
     
     
@@ -57,6 +97,14 @@ class Cart():
             del self.cart[product_id]
 
         self.session.modified = True
+
+        if self.request.user.is_authenticated:
+
+            current_user = Profile.objects.filter(
+                user__id=self.request.user.id)
+            cart_memory = str(self.cart)
+            cart_memory = cart_memory.replace("\'", "\"")
+            current_user.update(old_cart=str(cart_memory))
 
     def cart_total(self):
 
@@ -79,6 +127,7 @@ class Cart():
 
         return total
 
+    
 
     def __len__(self):
         return len(self.cart)
