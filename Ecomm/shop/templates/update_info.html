@@ -17,15 +17,23 @@
 
             <form method="POST" action="{% url 'update_info' %}">
                 {% csrf_token %}
+                    <h3 class="my-3">Billing Information</h3>
                 {{ user_form.as_p }}
 
-                <button type="submit" class="btn btn-primary">
+                    <h3 class="mt-5 mb-3">Shipping Information</h3>
+
+                {{ shipping_form.as_p }}
+
+                <button type="submit" class="btn btn-primary mt-3">
                     Update Info
                 </button>
                
             </form>
 
         </div>
+      
+
+
 
     </div>
 
