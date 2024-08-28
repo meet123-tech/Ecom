@@ -71,13 +71,13 @@
                 <div class="card-header mb-3">
                     Update Billing
                 </div>
-                <form method="POST" class="px-3" action="{% url 'update_user' %}">
+                <form method="POST" class="px-3" action="{% url 'billing_info' %}">
                     {% csrf_token %}
                     {{ shipping_form.as_p }}
                 
                     <center>
                 
-                        <a href="#" class="btn btn-primary my-3">Continue Billing</a>
+                        <button type="submit" class="btn btn-primary my-3">Continue Billing</button>
                     </center>
                 </form>
 

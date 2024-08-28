@@ -29,3 +29,14 @@ class ShippingForm(forms.ModelForm):
                   'shipping_city', 'shipping_state', 'shipping_postal_code', 'shipping_country']
         exclude = ['user',]
  
+class PaymentForm(forms.Form):
+
+    card_name = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Card name'}), required=True)
+    card_number = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Card number'}), required=True)
+    expiry_month = forms.ChoiceField(label="", choices=[(i, i) for i in range(1, 13)], widget=forms.Select(attrs={'class': 'form-control'}))
+    expiry_year = forms.ChoiceField(label="", choices=[(i, i) for i in range(2022, 2040)], widget=forms.Select(attrs={'class': 'form-control'}))
+    cvv = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'CVV'}), required=True)
+    
+
+
+
