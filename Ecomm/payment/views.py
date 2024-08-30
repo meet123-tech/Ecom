@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from cart.cart import Cart
-from .models import ShippingAddress,Order
+from .models import ShippingAddress,Order,OrderItem
 from .forms import ShippingForm,PaymentForm
 from django.contrib import messages
 
@@ -85,12 +85,50 @@ def process_order(request):
             user = request.user
             create_order = Order(user=user, full_name=full_name, email=email, shipping_address= shipping_address, paid_amount=paid_amount)
             create_order.save()
+
+            order_id = create_order.pk
+
+            for product in products():
+
+                product_id = product.id
+
+                if product.is_sale:
+                    product_price = product.sale_price
+                else:
+                    product_price = product.price
+
+                for key, value in quantities().items():
+                    if int(key) == product_id:
+                        create_order_item = OrderItem.objects.create(order_id=order_id, product_id=product_id,user=user,
+                                                 quantity=value, price=product_price)
+                        create_order_item.save()
+                        # messages.success(request, ('Product Added'))
+                    
+
             messages.success(request, ('Order Placed'))
             return redirect('home')
         else:
             create_order = Order( full_name=full_name, email=email,
                                  shipping_address=shipping_address, paid_amount=paid_amount)
             create_order.save()
+
+            order_id = create_order.pk
+
+            for product in products():
+
+                product_id = product.id
+
+                if product.is_sale:
+                    product_price = product.sale_price
+                else:
+                    product_price = product.price
+
+                for key, value in quantities().items():
+                    if int(key) == product_id:
+                        create_order_item = OrderItem.objects.create(order_id=order_id, product_id=product_id,
+                                                                     quantity=value, price=product_price)
+                        create_order_item.save()
+
             messages.success(request, ('Order Placed'))
             return redirect('home')
 
