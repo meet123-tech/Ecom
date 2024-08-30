@@ -130,7 +130,7 @@ def process_order(request):
                         create_order_item = OrderItem.objects.create(order_id=order_id, product_id=product_id,
                                                                      quantity=value, price=product_price)
                         create_order_item.save()
-                        
+
             for key in list(request.session.keys()):
                 if key == 'session_key':
                     del request.session[key]
@@ -143,3 +143,24 @@ def process_order(request):
     else:
         messages.success(request,('Access Denied'))
         return redirect('home')
+
+
+def shipping_dash(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        shipped_orders = Order.objects.filter(
+            shipping_status=True).order_by('-order_date')
+        return render(request,'payment/shipping_dash.html',{"shipped_orders":shipped_orders})
+    else:
+        messages.success(request, ('Access Denied'))
+        return redirect('home')
+
+
+def unshipping_dash(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        unshipped_orders = Order.objects.filter(
+            shipping_status=False).order_by('-order_date')
+        return render(request, 'payment/unshipping_dash.html', {"unshipped_orders" : unshipped_orders})
+    else:
+        messages.success(request, ('Access Denied'))
+        return redirect('home')
+ 
