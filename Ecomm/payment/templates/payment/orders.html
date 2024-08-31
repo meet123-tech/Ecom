@@ -38,8 +38,19 @@
                         </div>
                         
                         {% if orders.shipping_status %}
+                        
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="shipping_status" value="false">
+                            <button class="btn btn-sm btn-danger mt-3" type="submit" >Mark as UnShipped</button>
+                        </form>
                         <a class="btn btn-primary mt-3" href="{% url 'shipping_dash' %}">Back</a>
                         {% else %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="shipping_status" value="true">
+                            <button class="btn btn-sm btn-success mt-3" type="submit" >Mark as Shipped</button>
+                        </form>
                         <a class="btn btn-primary mt-3" href="{% url 'unshipping_dash' %}">Back</a>
                         {% endif %}
 

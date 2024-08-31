@@ -6,7 +6,7 @@
 
 <div class="container my-5 ">
     <div class="row justify-content-center">
-        <div class="col-8">
+        <div class="col-10">
             <h1 class="my-3">UnShipped Items</h1>
             <table class="table table-bordered table-striped table-hover">
                 <thead class="table-dark">
@@ -16,6 +16,7 @@
                         <th scope="col">Email</th>
                         <th scope="col">Orderd date</th>
                         <th scope="col">Amount</th>
+                        <th scope="col">Status</th>
                         <th scope="col">View</th>
 
                     </tr>
@@ -23,17 +24,25 @@
                 <tbody>
                     {% for item in unshipped_orders%}
                     <tr>
-                        
-                            <th scope="row">
-                                <!-- <a href="{% url 'orders' item.id %}"> -->
-                                {{ item.id }}
+
+                        <th scope="row">
+                            <!-- <a href="{% url 'orders' item.id %}"> -->
+                            {{ item.id }}
                             <!-- </a> -->
-                            </th>
-            
+                        </th>
+
                         <td>{{ item.full_name }}</td>
                         <td>{{ item.email }}</td>
                         <td>{{ item.order_date }}</td>
                         <td>{{ item.paid_amount }}</td>
+                        <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="shipping_status" value="true">
+                                <input type="hidden" name="num" value="{{ item.id }}">
+                                <button class="btn btn-sm btn-success" type="submit">Mark as Shipped</button>
+                            </form>
+                        </td>
                         <td>
                             <a href="{% url 'orders' item.id %}" class="btn btn-sm btn-outline-primary">
                                 Order - {{ item.id }}

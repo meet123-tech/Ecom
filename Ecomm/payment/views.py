@@ -3,6 +3,7 @@ from cart.cart import Cart
 from .models import ShippingAddress,Order,OrderItem
 from .forms import ShippingForm,PaymentForm
 from django.contrib import messages
+import datetime
 
 # Create your views here.
 
@@ -149,6 +150,18 @@ def shipping_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
         shipped_orders = Order.objects.filter(
             shipping_status=True).order_by('-order_date')
+        
+        if request.POST:
+            shipping_status = request.POST['shipping_status']
+            num = request.POST['num']
+            orders = Order.objects.filter(id=num)
+            
+            orders.update(shipping_status=False)
+            
+
+            messages.success(request, ('Order Updated'))
+            return redirect('shipping_dash')
+
         return render(request,'payment/shipping_dash.html',{"shipped_orders":shipped_orders})
     else:
         messages.success(request, ('Access Denied'))
@@ -159,6 +172,17 @@ def unshipping_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
         unshipped_orders = Order.objects.filter(
             shipping_status=False).order_by('-order_date')
+        
+        if request.POST:
+            shipping_status = request.POST['shipping_status']
+            now = datetime.datetime.now()
+            num = request.POST['num']
+            orders = Order.objects.filter(id=num)
+            orders.update(shipping_status=True, date_shipped=now)
+
+            messages.success(request, ('Order Updated'))
+            return redirect('unshipping_dash')
+
         return render(request, 'payment/unshipping_dash.html', {"unshipped_orders" : unshipped_orders})
     else:
         messages.success(request, ('Access Denied'))
@@ -169,7 +193,25 @@ def orders(request,pk):
 
     if request.user.is_authenticated and request.user.is_superuser:
         orders = Order.objects.get(id=pk)
+        print(orders)
         order_items = OrderItem.objects.filter(order=pk)
+
+        if request.POST:
+            shipping_status = request.POST['shipping_status']
+            if shipping_status == 'true':
+                orders = Order.objects.filter(id=pk)
+                print(orders)
+                now = datetime.datetime.now()
+                orders.update(shipping_status=True, date_shipped=now )
+            else:
+                orders = Order.objects.filter(id=pk)
+                orders.update(shipping_status=False)
+
+            messages.success(request, ('Order Updated'))
+            return redirect('home')
+            
+            
+
         return render(request, 'payment/orders.html', {"items": order_items , "orders": orders})
     else:
         messages.success(request, ('Access Denied'))
