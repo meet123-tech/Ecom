@@ -3,6 +3,7 @@ from cart.cart import Cart
 from .models import ShippingAddress,Order,OrderItem
 from .forms import ShippingForm,PaymentForm
 from django.contrib import messages
+from shop.models import Profile
 import datetime
 
 # Create your views here.
@@ -107,6 +108,10 @@ def process_order(request):
             for key in list(request.session.keys()):
                 if key == 'session_key':
                     del request.session[key]
+
+            #delete frm DB
+            current_user = Profile.objects.filter(user__id = request.user.id)
+            current_user.update(old_cart="")
 
             messages.success(request, ('Order Placed'))
             return redirect('home')
