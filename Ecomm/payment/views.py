@@ -163,4 +163,14 @@ def unshipping_dash(request):
     else:
         messages.success(request, ('Access Denied'))
         return redirect('home')
- 
+
+
+def orders(request,pk):
+
+    if request.user.is_authenticated and request.user.is_superuser:
+        orders = Order.objects.get(id=pk)
+        order_items = OrderItem.objects.filter(order=pk)
+        return render(request, 'payment/orders.html', {"items": order_items , "orders": orders})
+    else:
+        messages.success(request, ('Access Denied'))
+        return redirect('home')

@@ -10,7 +10,7 @@ urlpatterns = [
     path('process_order', views.process_order, name='process_order'),
     path('shipping_dash', views.shipping_dash, name='shipping_dash'),
     path('unshipping_dash', views.unshipping_dash, name='unshipping_dash'),
-
+    path('orders/<int:pk>', views.orders, name='orders'),
 
 
     

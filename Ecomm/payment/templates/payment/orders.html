@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<div class="container my-5 ">
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <h1 class="my-3">Order</h1>
+
+            
+                <div class="card text-center">
+                    <div class="card-header">
+                     <h3>ORDER - {{ orders.id }}</h3> 
+                    </div>
+                    <div class="card-body">
+                  
+                        <h5 class="card-title">Full Name : {{ orders.full_name }}</h5>
+                        <p class="card-text">Email : {{ orders.email }} </p>
+                        
+                        {% if orders.shipping_status %}
+                            <p class="card-text">Date Shipped : {{ orders.date_shipped }} </p>
+                        {% else %}
+                            <p class="card-text">Date Ordered : {{ orders.order_date }} </p>
+                        {% endif %}
+
+
+                        <h6 class="card-text " >Shipping Address : {{ orders.shipping_address }} </h6>
+
+                        <div class="border p-2 mt-2">
+                            <h3 class="card-text border-bottom"> ITEMS </h3>
+                            
+                            {% for item in items %}
+                            <h6 class="card-text"> {{ item.product }} - {{ item.quantity }} - {{ item.price }}</h6>
+                            {% endfor %}
+
+                        </div>
+                        
+                        {% if orders.shipping_status %}
+                        <a class="btn btn-primary mt-3" href="{% url 'shipping_dash' %}">Back</a>
+                        {% else %}
+                        <a class="btn btn-primary mt-3" href="{% url 'unshipping_dash' %}">Back</a>
+                        {% endif %}
+
+                    </div>
+                    
+                </div>
+
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+{% endblock content %}
