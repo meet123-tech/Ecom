@@ -8,7 +8,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
-"""
+""" 
 
 from pathlib import Path
 import os
@@ -30,9 +30,8 @@ SECRET_KEY = 'django-insecure-d&qlv(2j8$4)*=)=s+@v^nupd&vtnj@_-&^brq&w#9#qmxaug@
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = []
-
+CSRF_TRUSTED_ORIGINS = []
 
 # Application definition
 
@@ -45,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shop',
     'cart',
-    'payment'
+    'payment',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -56,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'Ecomm.urls'
@@ -134,6 +135,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = ['static/']
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
